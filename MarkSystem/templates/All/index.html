@@ -1,0 +1,37 @@
+<!-- 
+{# 只要利用模板渲染,然后把filename传入就行 #}
+ -->
+<html>
+
+<body>
+    <div class="form">
+        <!-- 成绩会提交到 gcore/ -->
+        <form id="modifyPassword" class="form-horizontal" action="gcore/" method="post">
+            <!-- 成绩输入 -->
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-1">
+                    <div class="input-group">
+                        <span class="input-group-addon">成绩<span class="glyphicon glyphicon-user"></span></span>
+                        <input type="text" id="grade" name="grade" class="form-control" placeholder="" value="80">
+                    </div>
+                </div>
+            </div>
+
+            <!--提交按钮 -->
+            <div class="form-group form-actions">
+                <div class="col-xs-12 text-center">
+                    <button type="submit" id="gcore" class="btn btn-sm btn-success">
+                        <span class="fa fa-check-circle"></span>提交
+                    </button>
+
+                </div>
+            </div>
+        </form>
+
+        <div style="height: 500px; width: 400px; overflow: hidden; margin: 0px; background-color: rgb(82, 86, 89);">
+            <embed width="100%" height="100%" name="plugin" id="plugin" src="{{ filename }}">
+        </div>
+    </div>
+</body>
+
+</html>

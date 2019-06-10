@@ -1,0 +1,27 @@
+<html>
+
+<br>
+<h1>已阅</h1>
+
+{% for fileNameLink,fileName in reviewList %}
+{{forloop.counter}}
+<a href="{{fileNameLink}}" target="_blank">{{fileName}}</a>
+</br>
+{% empty%}
+<!--给出的列表为或列表不存在时，执行此处-->
+
+{% endfor%}
+<h1>未阅</h1>
+
+{% for fileNameLink ,fileName in unReviewList %}
+{{forloop.counter}}
+<a href="{{fileNameLink}}" target="_blank">{{fileName}}</a>
+</br>
+{% empty%}
+<!--给出的列表为或列表不存在时，执行此处-->
+</br>
+
+{% endfor%}
+</body>
+
+</html>
