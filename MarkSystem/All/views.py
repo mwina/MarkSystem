@@ -47,7 +47,7 @@ def login(request):
             else:
                 if user.Password == password:
                     request.session.setdefault('username', user.Name)
-                    return  http.HttpResponseRedirect('http://127.0.0.1:8000/All/list')
+                    return http.HttpResponseRedirect('http://127.0.0.1:8000/All/list')
                 else:
                     return render(request, 'All/login.html')
     return render(request, 'All/login.html')
@@ -56,31 +56,39 @@ def login(request):
 def list(request):
     username = request.session.get('username', None)
     reviewList = []
+    unReviewList = []
     paper_list = PaperGrade.objects.filter(CheckerNumber__lte=2)
-    for paper in paper_list:
-        reviewList.append(paper.my_check(username))
+    for paper1 in paper_list:
+        if paper1.my_checked(username) is not None:
+            reviewList.append(paper1.my_checked(username))
+    for paper2 in paper_list:
+        if paper2.my_will_check(username) is not None:
+            unReviewList.append(paper2.my_will_check(username))
 
-    for i in reviewList:
-        a = i
-    reviewList = a
-    return render(request, 'All/list.html', {'reviewList': reviewList})
+    return render(request, 'All/list.html', {'reviewList': reviewList, 'unReviewList': unReviewList})
 
 
 def index(request):
     if request.method == "POST":
-        papername = request.POST.get('papername', None)
+        papername = request.POST.get('filename', None)
         paper = PaperGrade.objects.get(PaperName=papername)
+        request.session.setdefault('papername', papername)
         if paper.file_type() is 'docx':
             html = PyDocX.to_html(paper)
             return render(request, html)  #不知对错
-        elif paper.file_type() is 'pdf':
-            return render(request, r'File/' + paper.PaperName)  #url写法自我怀疑人生中
         else:
-            pass  #视频未采用
+            return render(request, paper.PaperFile)  #url写法自我怀疑人生中
     else:
         return render(request, 'All/index.html')
     return render(request, 'All/index.html')
 
 
 def gcore(request):
+    username = request.session.get('username', None)
+    papername = request.session.get('papername', None)
+    if request.method == "POST":
+        papergrade = request.POST.get('grade', None)
+        paper = PaperGrade.objects.get(PaperName=papername)
+        paper.update(papergrade, username)
+        del request.session['papername']
     return http.HttpResponseRedirect('http://127.0.0.1:8000/All/list')

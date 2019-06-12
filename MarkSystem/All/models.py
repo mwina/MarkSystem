@@ -67,10 +67,15 @@ class PaperGrade(models.Model):
         else:
             return HttpResponse('打分失败，已有三人进行该项目的评分')
 
-    def my_check(self, name):
-        List = []
-        List.append(['http://127.0.0.1:8000/All/index?filename='+self.PaperName, self.PaperName])
-        return List
+    def my_checked(self, name):
+        if self.FirstChecker == name or self.SecondChecker == name or self.ThirdChecker == name:
+            return (['http://127.0.0.1:8000/All/index?filename='+self.PaperName, self.PaperName])
+        else:
+            return None
+
+    def my_will_check(self, name):
+        if self.FirstChecker != name and self.SecondChecker != name and self.ThirdChecker != name:
+            return (['http://127.0.0.1:8000/All/index?filename='+self.PaperName, self.PaperName])
 
 
 class UserInfo(models.Model):
