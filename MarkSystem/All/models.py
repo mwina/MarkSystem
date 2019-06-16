@@ -46,20 +46,20 @@ class PaperGrade(models.Model):
 
     def update(self, PaperGrade, CheckerName):
         '''项目 项目成绩 评卷人'''
-        if self.CheckNumber <= 2:
-            if self.CheckNumber == 0:
+        if self.CheckerNumber <= 2:
+            if self.CheckerNumber == 0:
                 self.FirstGrade = PaperGrade
                 self.FirstChecker = CheckerName
-                self.CheckNumber = self.CheckNumber + 1
-            elif self.CheckNumber == 1:
+                self.CheckerNumber = self.CheckerNumber + 1
+            elif self.CheckerNumber == 1:
                 self.SecondGrade = PaperGrade
                 self.SecondChecker = CheckerName
-                self.CheckNumber = self.CheckNumber + 1
+                self.CheckerNumber = self.CheckerNumber + 1
             else:
                 self.ThirdGrade = PaperGrade
                 self.ThirdChecker = CheckerName
-                self.CheckNumber = self.CheckNumber + 1
-            if self.CheckNumber == 3:
+                self.CheckerNumber = self.CheckerNumber + 1
+            if self.CheckerNumber == 3:
                 self.FinalGrade = (self.FirstGrade + self.SecondGrade + self.ThirdGrade) / 3
                 self.usable_check()
             self.save()
@@ -81,7 +81,7 @@ class PaperGrade(models.Model):
 class UserInfo(models.Model):
     Name = models.CharField(max_length=20)
     Password = models.CharField(max_length=20)
-    PaperChecking = models.CharField(max_length=256, blank=True)
+    PaperChecking = models.CharField(max_length=256, blank=True, null=True )
     isDelete = models.BooleanField(default=False)
 
 

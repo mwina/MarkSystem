@@ -71,8 +71,8 @@ def list(request):
 
 
 def index(request):
-    if request.method == "POST":
-        papername = request.POST.get('filename', None)
+    if request.method == "GET":
+        papername = request.GET.get('filename', None)
         paper = PaperGrade.objects.get(PaperName=papername)
         username = request.session.get('username', None)
         user = UserInfo.objects.get(Name=username)
@@ -82,7 +82,7 @@ def index(request):
             html = PyDocX.to_html(paper)
             return render(request, html)  #不知对错
         else:
-            return render(request, 'All/index.html', {'filename': r'File' + paper.PaperName})  #url写法自我怀疑人生中
+            return render(request, 'All/index.html', {'filename': r'/File/' + paper.PaperName})  #url写法自我怀疑人生中
     else:
         return render(request, 'All/index.html')
     return render(request, 'All/index.html')
