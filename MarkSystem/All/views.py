@@ -65,6 +65,8 @@ def list(request):
         if paper2.my_will_check(username) is not None:
             unReviewList.append(paper2.my_will_check(username))
 
+    request.session.set_expiry(0)
+
     return render(request, 'All/list.html', {'reviewList': reviewList, 'unReviewList': unReviewList})
 
 
@@ -72,12 +74,15 @@ def index(request):
     if request.method == "POST":
         papername = request.POST.get('filename', None)
         paper = PaperGrade.objects.get(PaperName=papername)
-        request.session.setdefault('papername', papername)
+        username = request.session.get('username', None)
+        user = UserInfo.objects.get(Name=username)
+        user.PaperChecking = papername
+        user.save()
         if paper.file_type() is 'docx':
             html = PyDocX.to_html(paper)
             return render(request, html)  #不知对错
         else:
-            return render(request, paper.PaperFile)  #url写法自我怀疑人生中
+            return render(request, 'All/index.html', {'filename': r'File' + paper.PaperName})  #url写法自我怀疑人生中
     else:
         return render(request, 'All/index.html')
     return render(request, 'All/index.html')
@@ -85,10 +90,12 @@ def index(request):
 
 def gcore(request):
     username = request.session.get('username', None)
-    papername = request.session.get('papername', None)
+    user = UserInfo.objects.get(Name=username)
+    papername = user.PaperChecking
+    paper = PaperGrade.objects.get(PaperName=papername)
     if request.method == "POST":
         papergrade = request.POST.get('grade', None)
-        paper = PaperGrade.objects.get(PaperName=papername)
         paper.update(papergrade, username)
-        del request.session['papername']
+    user.PaperChecking = None
+    user.save()
     return http.HttpResponseRedirect('http://127.0.0.1:8000/All/list')

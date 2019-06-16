@@ -7,7 +7,7 @@ from django.http import HttpResponse, request
 
 class PaperGrade(models.Model):
     PaperFile = models.FileField(upload_to='File/')
-    PaperName = models.CharField(max_length=256, default=PaperFile.name)
+    PaperName = models.CharField(max_length=256, default=PaperFile.name, blank=True)
 
     FirstChecker = models.CharField(max_length=20, blank=True)
     FirstGrade = models.IntegerField(default=0)
@@ -81,6 +81,7 @@ class PaperGrade(models.Model):
 class UserInfo(models.Model):
     Name = models.CharField(max_length=20)
     Password = models.CharField(max_length=20)
+    PaperChecking = models.CharField(max_length=256, blank=True)
     isDelete = models.BooleanField(default=False)
 
 
